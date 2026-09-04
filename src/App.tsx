@@ -14,6 +14,8 @@ export const App: React.FC = () => {
   const [todo, setTodo] = useState<Todo[]>([]);
   const [loading, setLoading] = useState(true);
   const [isPressed, setIsPressed] = useState<number | null>(null);
+  const [query, setQuery] = useState('');
+  const [status, setStatus] = useState('all');
 
   useEffect(() => {
     getTodos().then(data => {
@@ -21,6 +23,20 @@ export const App: React.FC = () => {
       setLoading(false);
     });
   }, []);
+
+  const filteredTodos = todo.filter(element => {
+    let chekers = true;
+
+    if (status === 'active') {
+      chekers = element.completed === false;
+    }
+
+    if (status === 'completed') {
+      chekers = element.completed === true;
+    }
+
+    return chekers && element.title.toLowerCase().includes(query.toLowerCase());
+  });
 
   return (
     <>
@@ -30,7 +46,12 @@ export const App: React.FC = () => {
             <h1 className="title">Todos:</h1>
 
             <div className="block">
-              <TodoFilter />
+              <TodoFilter
+                query={query}
+                status={status}
+                onQueryChange={setQuery}
+                onStatusChange={setStatus}
+              />
             </div>
 
             <div className="block">
@@ -38,10 +59,11 @@ export const App: React.FC = () => {
                 <Loader />
               ) : (
                 <TodoList
-                  todos={todo}
+                  todos={filteredTodos}
                   onSelected={newElemetn => {
                     setIsPressed(newElemetn);
                   }}
+                  selectedTodoId={isPressed}
                 />
               )}
             </div>

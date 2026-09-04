@@ -4,9 +4,14 @@ import { Todo } from '../../types/Todo';
 type Props = {
   todos: Todo[];
   onSelected: (id: number) => void;
+  selectedTodoId: number | null;
 };
 
-export const TodoList: React.FC<Props> = ({ todos, onSelected }) => (
+export const TodoList: React.FC<Props> = ({
+  todos,
+  onSelected,
+  selectedTodoId,
+}) => (
   <table className="table is-narrow is-fullwidth">
     <thead>
       <tr>
@@ -53,7 +58,13 @@ export const TodoList: React.FC<Props> = ({ todos, onSelected }) => (
                 }}
               >
                 <span className="icon">
-                  <i className="far fa-eye" />
+                  <i
+                    className={
+                      element.id === selectedTodoId
+                        ? 'far fa-eye-slash'
+                        : 'far fa-eye'
+                    }
+                  />
                 </span>
               </button>
             </td>
