@@ -25,17 +25,19 @@ export const App: React.FC = () => {
   }, []);
 
   const filteredTodos = todo.filter(element => {
-    let chekers = true;
+    let matchesStatus = true;
 
     if (status === 'active') {
-      chekers = element.completed === false;
+      matchesStatus = element.completed === false;
     }
 
     if (status === 'completed') {
-      chekers = element.completed === true;
+      matchesStatus = element.completed === true;
     }
 
-    return chekers && element.title.toLowerCase().includes(query.toLowerCase());
+    return (
+      matchesStatus && element.title.toLowerCase().includes(query.toLowerCase())
+    );
   });
 
   return (
@@ -60,8 +62,8 @@ export const App: React.FC = () => {
               ) : (
                 <TodoList
                   todos={filteredTodos}
-                  onSelected={newElemetn => {
-                    setIsPressed(newElemetn);
+                  onSelected={newElement => {
+                    setIsPressed(newElement);
                   }}
                   selectedTodoId={isPressed}
                 />
@@ -70,9 +72,9 @@ export const App: React.FC = () => {
           </div>
         </div>
       </div>
-      {isPressed && (
+      {isPressed !== null && (
         <TodoModal
-          presed={isPressed}
+          selectedTodoId={isPressed}
           todos={todo}
           onClose={() => {
             setIsPressed(null);
